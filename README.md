@@ -1,6 +1,6 @@
 # vidsc_api_bridge
 
-Android app to make watching movies via cidsrc tolerable on my phone
+Cross Platform app (Windows, Android, Linux) to make watching movies via cidsrc tolerable on my phone
 
 ## Getting Started
 
