@@ -68,11 +68,6 @@ class _HomePageState extends State<HomePage> {
         poster_path_list.add(a['poster_path']);
         overview_list.add(a['overview']);
       }
-
-      // print(title_list);
-      // print(id_list);
-      // print(poster_path_list);
-      // print(overview_list);
     });
   }
 
@@ -252,14 +247,14 @@ class _HomePageState extends State<HomePage> {
                                         mainAxisAlignment:
                                             MainAxisAlignment.spaceEvenly,
                                         children: [
-                                          Expanded(
-                                            flex: 1,
-                                            child: Card(
-                                              child: Image.network(
-                                                'assets//images//error.jpg',
-                                              ),
-                                            ),
-                                          ),
+                                          // Expanded(
+                                          //   flex: 1,
+                                          //   child: Card(
+                                          //     child: Image.asset(
+                                          //       'assets\\images\\error.jpg',
+                                          //     ),
+                                          //   ),
+                                          // ),
                                           Expanded(
                                             flex: 1,
                                             child: Column(
