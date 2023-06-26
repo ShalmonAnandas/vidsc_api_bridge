@@ -72,12 +72,19 @@ mixin _$MovieStore on _MovieStore, Store {
     });
   }
 
-  late final _$getMoviesAsyncAction =
-      AsyncAction('_MovieStore.getMovies', context: context);
+  late final _$moviesAtom = Atom(name: '_MovieStore.movies', context: context);
 
   @override
-  Future<List<String>> getMovies(String movieTitle) {
-    return _$getMoviesAsyncAction.run(() => super.getMovies(movieTitle));
+  List<Result> get movies {
+    _$moviesAtom.reportRead();
+    return super.movies;
+  }
+
+  @override
+  set movies(List<Result> value) {
+    _$moviesAtom.reportWrite(value, super.movies, () {
+      super.movies = value;
+    });
   }
 
   late final _$playMovieAsyncAction =
@@ -88,13 +95,28 @@ mixin _$MovieStore on _MovieStore, Store {
     return _$playMovieAsyncAction.run(() => super.playMovie(id));
   }
 
+  late final _$_MovieStoreActionController =
+      ActionController(name: '_MovieStore', context: context);
+
+  @override
+  void updateMovieData(Movies movieData) {
+    final _$actionInfo = _$_MovieStoreActionController.startAction(
+        name: '_MovieStore.updateMovieData');
+    try {
+      return super.updateMovieData(movieData);
+    } finally {
+      _$_MovieStoreActionController.endAction(_$actionInfo);
+    }
+  }
+
   @override
   String toString() {
     return '''
 titleList: ${titleList},
 idList: ${idList},
 posterPathList: ${posterPathList},
-overviewList: ${overviewList}
+overviewList: ${overviewList},
+movies: ${movies}
     ''';
   }
 }

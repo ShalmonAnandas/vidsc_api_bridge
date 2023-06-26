@@ -1,10 +1,10 @@
-import 'dart:developer';
-import 'dart:ffi';
+import 'dart:convert';
 
+import 'package:mobx/mobx.dart';
 import 'package:requests/requests.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'dart:convert';
-import 'package:mobx/mobx.dart';
+
+import 'movies.dart';
 
 part 'moviestore.g.dart';
 
@@ -23,13 +23,20 @@ abstract class _MovieStore with Store {
   @observable
   List<String> overviewList = [];
 
+  @observable
+  List<Result> movies = [];
+
   @action
-  Future<List<String>> getMovies(String movieTitle) async {
+  void updateMovieData(Movies movieData) {
+    movies = movieData.results;
+  }
+
+  Future<void> getMovies(String movieTitle) async {
     final cleanedTitle = movieTitle.replaceAll(" ", "+");
-    titleList.clear();
-    idList.clear();
-    posterPathList.clear();
-    overviewList.clear();
+    // titleList.clear();
+    // idList.clear();
+    // posterPathList.clear();
+    // overviewList.clear();
 
     final r = await Requests.get(
         "https://api.themoviedb.org/3/search/movie?api_key=87d5585a5497b373679e8bdc7d6f0d22&query=$cleanedTitle");
@@ -37,30 +44,34 @@ abstract class _MovieStore with Store {
     final stringResult = r.content();
     final jsonResult = json.decode(stringResult);
 
-    final results = jsonResult['results'];
+    Movies movies = Movies.fromMap(jsonResult);
 
+    updateMovieData(movies);
+
+    print("API_Result: ${movies.toString()}");
     List<String> tempTitle = [];
     List<int> tempID = [];
     List<String> tempPoster = [];
     List<String> tempOverview = [];
 
-    for (final item in results) {
-      final title = item['title'];
-      final id = item['id'];
-      final posterPath = item['poster_path'];
-      final overview = item['overview'];
-
-      tempTitle.add(title);
-      tempID.add(id);
-      tempPoster.add(posterPath);
-      tempOverview.add(overview);
-    }
-
-    titleList = tempTitle;
-    idList = tempID;
-    posterPathList = tempPoster;
-    overviewList = tempOverview;
-    return titleList;
+    //
+    // for (final item in results) {
+    //   final title = item['title']??"";
+    //   final id = item['id']??0;
+    //   final posterPath = item['poster_path']??"";
+    //   final overview = item['overview']??"";
+    //
+    //   tempTitle.add(title);
+    //   tempID.add(id);
+    //   tempPoster.add(posterPath);
+    //   tempOverview.add(overview);
+    // }
+    //
+    // titleList = tempTitle;
+    // idList = tempID;
+    // posterPathList = tempPoster;
+    // overviewList = tempOverview;
+    //return titleList;
   }
 
   @action
